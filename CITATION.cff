@@ -1,0 +1,47 @@
+cff-version: 1.2.0
+message: "If you use this repository, please cite the accompanying article and this repository."
+title: "AOM-and-Bari-Surg-for-OSA-SRMA: code and data for OSA SRMA"
+type: software
+repository-code: "https://github.com/reblocke/AOM-and-Bari-Surg-for-OSA-SRMA"
+authors:
+  - family-names: Locke
+    given-names: Brian W.
+  - family-names: Gomez-Lumbreras
+    given-names: Ainhoa
+  - family-names: Tan
+    given-names: Chia Jie
+  - family-names: Nonthasawadsri
+    given-names: Teerawat
+  - family-names: Veettil
+    given-names: Sajesh K.
+  - family-names: Patikorn
+    given-names: Chanthawat
+  - family-names: Chaiyakunapruk
+    given-names: Nathorn
+preferred-citation:
+  type: article
+  title: "The association of weight loss from anti-obesity medications or bariatric surgery and apnea-hypopnea index in obstructive sleep apnea"
+  authors:
+    - family-names: Locke
+      given-names: Brian W.
+    - family-names: Gomez-Lumbreras
+      given-names: Ainhoa
+    - family-names: Tan
+      given-names: Chia Jie
+    - family-names: Nonthasawadsri
+      given-names: Teerawat
+    - family-names: Veettil
+      given-names: Sajesh K.
+    - family-names: Patikorn
+      given-names: Chanthawat
+    - family-names: Chaiyakunapruk
+      given-names: Nathorn
+  journal: "Obesity Reviews"
+  volume: '25'
+  issue: '4'
+  year: 2024
+  doi: "10.1111/obr.13697"
+  pmcid: "PMC11311115"
+  pmid: "38342767"
+  start: "e13697"
+  url: "https://onlinelibrary.wiley.com/doi/10.1111/obr.13697"
