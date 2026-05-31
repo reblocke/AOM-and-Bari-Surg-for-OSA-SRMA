@@ -50,6 +50,14 @@ The study uses extracted, study-level data compiled by the authors. Two Excel wo
 
 There are no patient-level data or protected health information in this repository.
 
+### Workbook dictionary
+| File | Sheet(s) | Unit of observation | Key fields |
+|---|---|---|---|
+| `Data Extraction Table.xlsx` | `Sheet1`, `AGL check` | Study arm or extracted comparison from an included trial | Author/year, DOI, intervention category, intervention/control sample sizes, weight units and changes, AHI baseline/follow-up/change, follow-up timing, and analysis flags used by the Stata script. |
+| `ROB2_OSA SRMA.xlsx` | `Sheet 1` | Study-level risk-of-bias assessment | Study identifier, RoB2 domains `D1`-`D5`, and overall judgment. |
+
+Variable names are preserved as worksheet headers because the Stata script imports the workbooks directly. When modifying a workbook, keep header names stable or update the corresponding `import excel` and variable-reference code in `OSA Wt Loss SRMA.do`.
+
 ## Environment
 - **Software**: Stata (SE/MP recommended). The `.do` file uses standard Stata commands for meta-analysis and meta-regression.
 - **Operating systems**: Any OS supported by Stata (Windows/macOS/Linux).
