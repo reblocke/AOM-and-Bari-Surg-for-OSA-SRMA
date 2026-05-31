@@ -1,0 +1,34 @@
+# AGENTS
+
+## Project purpose
+This repository contains the Stata analysis script and study-level extraction workbooks for the systematic review, meta-analysis, and meta-regression on weight loss interventions and apnea-hypopnea index in obstructive sleep apnea.
+
+## Public-data constraints
+- The repository contains study-level extraction tables, not patient-level data or PHI.
+- Preserve the article citation and repository citation metadata when reusing the workbooks or code.
+- Do not copy publisher-formatted article text into the repository. Link to the DOI, PubMed, and PubMed Central records instead.
+
+## How to orient quickly
+- Start with `README.md` for links, citation, data-access notes, workflow, and paper-to-code mapping.
+- Use `CITATION.cff` for structured citation metadata.
+- The main analysis script is `OSA Wt Loss SRMA.do`.
+- The workbook inputs are `Data Extraction Table.xlsx` and `ROB2_OSA SRMA.xlsx`.
+
+## Reproduction workflow
+Run from the repository root with Stata:
+
+```stata
+cd "path/to/AOM-and-Bari-Surg-for-OSA-SRMA"
+do "OSA Wt Loss SRMA.do"
+```
+
+The script reads the Excel workbooks from the repository root. If the workbooks are moved, update the `import excel` calls in the `.do` file.
+
+## Workbook structure
+- `Data Extraction Table.xlsx`: study-level trial and intervention data, including DOI, intervention class, sample size, weight measures, AHI measures, follow-up, and analysis variables.
+- `ROB2_OSA SRMA.xlsx`: risk-of-bias 2 judgments by study and RoB2 domain.
+
+## Verification before publishing changes
+- Run `git diff --check`.
+- Validate `CITATION.cff` as YAML after citation edits.
+- If the Stata script is run, do not commit generated figures, logs, or exploratory exports unless a release explicitly requires them.
