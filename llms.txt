@@ -1,0 +1,39 @@
+# AOM-and-Bari-Surg-for-OSA-SRMA
+
+## Purpose
+Public Stata analysis repository and study-level extraction data for the systematic review, meta-analysis, and meta-regression of anti-obesity medications or bariatric surgery and apnea-hypopnea index in obstructive sleep apnea.
+
+## Canonical identifiers
+- Repository: https://github.com/reblocke/AOM-and-Bari-Surg-for-OSA-SRMA
+- Final article DOI: https://doi.org/10.1111/obr.13697
+- PubMed: https://pubmed.ncbi.nlm.nih.gov/38342767/
+- PubMed Central: https://pmc.ncbi.nlm.nih.gov/articles/PMC11311115/
+- PROSPERO: https://www.crd.york.ac.uk/PROSPERO/view/CRD42022378853
+- Baseline Stata release: https://github.com/reblocke/AOM-and-Bari-Surg-for-OSA-SRMA/releases/tag/stata-baseline-v1
+
+## What is in this repository
+- `OSA Wt Loss SRMA.do`: end-to-end Stata workflow for data processing, meta-analysis, meta-regression, sensitivity analyses, and figure generation.
+- `Data Extraction Table.xlsx`: public study-level extraction workbook used by the Stata script.
+- `ROB2_OSA SRMA.xlsx`: public risk-of-bias 2 assessment workbook.
+- `README.md`: human-readable overview, citation, workflow, data access, and paper-code mapping.
+- `CITATION.cff`: software citation and preferred article citation metadata.
+- `data_dictionary.md` and `data_dictionary.csv`: machine-readable workbook headers, derived Stata variables, and generated-output documentation.
+- `AGENTS.md`: repository-specific guidance for future coding agents.
+
+## Data and license notes
+The workbooks contain study-level extracted data and risk-of-bias assessments. They do not contain patient-level data or PHI. Code is MIT licensed. Reuse of the compiled study-level data should cite the Obesity Reviews article.
+
+## Default run command
+Run from the repository root:
+
+```stata
+do "OSA Wt Loss SRMA.do"
+```
+
+The script reads `Data Extraction Table.xlsx` from the repository root. It writes generated Stata datasets to `outputs/stata/` and generated figures, logs, and copied do-file snapshots to `Results and Figures/<date>/`.
+
+## Agent cautions
+- Preserve the legacy Stata analysis logic unless a future task explicitly asks for scientific refactoring.
+- Do not copy publisher-formatted article text into the repository; link DOI, PubMed, PMC, and PROSPERO records instead.
+- Keep README, `llms.txt`, `CITATION.cff`, `AGENTS.md`, and data dictionary files synchronized after article, release, workbook, or workflow changes.
+- Validate `CITATION.cff` with CFF 1.2 tooling before publishing metadata changes.

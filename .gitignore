@@ -1,2 +1,26 @@
-
 .DS_Store
+.Rhistory
+.RData
+.Rproj.user/
+.idea/
+.vscode/
+
+# Generated Stata artifacts
+*.dta
+*.gph
+*.log
+*.smcl
+*.ster
+
+# Generated analysis outputs
+Results and Figures/
+figures/
+outputs/
+*.png
+*.tif
+*.tiff
+*.csv
+*.xlsx
+!Data Extraction Table.xlsx
+!ROB2_OSA SRMA.xlsx
+!data_dictionary.csv
