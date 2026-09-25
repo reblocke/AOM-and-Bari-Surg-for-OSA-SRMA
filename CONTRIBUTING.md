@@ -25,7 +25,7 @@ Thank you for your interest in improving the reproducibility and clarity of this
   - If adding new extracted studies, review the extraction table and supporting RoB2 workbook together and document sources. The analysis imports only `Sheet1` of the extraction table.
 
 ## Re-running checks
-Please include a short paragraph in your PR describing the exact checks performed, their input/output scope, and what remains unverified. The do-file declares graph exports under a dated result directory, but its current macro delimiters need a separate code fix before their paths can be verified.
+Please include a short paragraph in your PR describing the exact checks performed, their input/output scope, and what remains unverified. Use the README's [Stata invocation](./README.md#run-the-existing-script) and [output map](./README.md#output-and-verification-boundary) when checking arguments, the dated log root, and the separate derived-data path. The do-file declares graph exports under the dated result directory, but its current macro delimiters need a separate code fix before their paths can be verified.
 
 ## Reporting issues and asking questions
 - Use [GitHub Issues](../../issues). Include:

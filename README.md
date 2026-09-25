@@ -7,22 +7,20 @@ This repository contains the Stata analysis script and study-level extraction ma
 
 ## Run the existing script
 
-The do-file declares **Stata 18**. It uses Stata's `meta` commands and calls `adjust`; its graphs select `cleanplots`, `white_tableau`, and `white_w3d` schemes. The repository does not install or pin those schemes or any additional command packages. Their availability, the licensed Stata environment, and platform compatibility have not been tested for this README change.
+The do-file declares **Stata 18**. It uses Stata's `meta` commands and calls `adjust`; its graphs select `cleanplots`, `white_tableau`, and `white_w3d` schemes. The repository does not install or pin those schemes or any additional command packages. Their availability, the licensed Stata environment, and platform compatibility have not been tested for this documentation review.
 
-Start Stata with this repository as the working directory. The script copies `OSA Wt Loss SRMA.do` by its bare filename, and its derived-data output is relative to the working directory even when the workbook directory is supplied separately.
+Use a **new disposable checkout** with the repository as Stata's working directory and a previously unused result root whose parent exists. The script copies `OSA Wt Loss SRMA.do` by its bare filename, so supplying a separate workbook directory does not change the required working directory. Its optional arguments are, in order, `workbook_dir` (default `.`) and `output_root` (default `Results and Figures`). The workbook directory must contain `Data Extraction Table.xlsx`; the script imports only its `Sheet1` with the first row as headers.
 
-```stata
-cd "/path/to/AOM-and-Bari-Surg-for-OSA-SRMA"
-do "OSA Wt Loss SRMA.do"
-```
+Before attempting the command below, note its writes: it creates a dated `<output_root>/<Stata $S_DATE>/Logs` directory, opens a text log with `replace`, copies the do-file there, saves and reuses `outputs/stata/osa_antiobesity_srma.dta` with `replace` relative to the working directory, and attempts PNG exports under the dated root with `replace`. A repeated run can replace earlier results. The current graph-export macro delimiter is malformed, beginning at line 97, so graph creation and a complete run are unverified. The script has no explicit success marker. Only a completed run with its final export, checked files, and log could support reproduction; an earlier log or derived dataset alone cannot. This invocation was inspected in source, not executed here.
 
-The optional arguments are, in order, `workbook_dir` and `output_root`. They default to `.` and `Results and Figures`. To use a different workbook directory and a new result root whose parent already exists:
+From the new checkout's root, the following example uses the tracked workbook and a new `new-results` root:
 
 ```stata
-do "OSA Wt Loss SRMA.do" "/path/to/workbooks" "my-results"
+cd "/path/to/new-disposable-checkout"
+do "OSA Wt Loss SRMA.do" "." "new-results"
 ```
 
-`workbook_dir` must contain `Data Extraction Table.xlsx`. The script checks for that file, imports its `Sheet1` with the first row as headers, and does **not** import the RoB workbook or the `AGL check` sheet. The example is source-inspected, not an executed reproduction command; see the [current blocker](#output-and-verification-boundary) before running it in a disposable checkout.
+For a workbook stored elsewhere, supply its containing directory as the first argument and keep the second argument a previously unused result root. The do-file does **not** import the RoB workbook or the `AGL check` sheet. See the [output and verification boundary](#output-and-verification-boundary) before interpreting any files.
 
 ## Inputs and data meaning
 
@@ -45,7 +43,7 @@ The do-file converts selected workbook columns to numeric values with `destring`
 | Graphs | PNG names under the dated result directory, as declared in the script | `graph export` statements already exist, but their `results_dir` macro uses a backtick where Stata requires a closing apostrophe (first occurrence at line 97, repeated through the final export). Successful paths or files have not been verified. |
 | Tables/statistics | Stata results and the opened log | `meta summarize`, `meta regress`, and related commands are present; the script has no CSV, Excel, or `putexcel` table-export call. |
 
-The malformed graph paths are a **separate code issue**: inspect and correct those macro delimiters in an authorized do-file change, then run the script with a new output namespace and check the log and files. This documentation PR does not edit the do-file. A Stata run, graph creation, table reproduction, and comparison with the paper were **not performed** for this README update. An opened log or derived `.dta` alone would not establish completion of the full script.
+**Static review record (2026-09-24):** At implementation base `main@31680357215d285e39fad6dd3b0fd876508c72ee`, the do-file blob was `1aa1621dc6a9dfb61aa1598a268b8fefc44d7c24`. Its malformed graph paths remain a **separate code issue**: inspect and correct those macro delimiters in an authorized do-file change, then run in a new output namespace and check the log and files. This review changed documentation only. A Stata run, graph creation, table reproduction, and comparison with the paper were **not performed**. An opened log or derived `.dta` alone would not establish completion of the full script.
 
 ## Source-to-exhibit guide
 
