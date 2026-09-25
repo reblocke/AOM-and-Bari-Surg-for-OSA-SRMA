@@ -1,114 +1,67 @@
-# Anti-obesity medications and bariatric surgery for obstructive sleep apnea (OSA): SRMA code & data
+# Anti-obesity medications and bariatric surgery for obstructive sleep apnea: SRMA code and extracted data
 
-> Supporting code and data extraction tables for the systematic review, meta-analysis, and meta-regression accompanying the article **“The association of weight loss from anti-obesity medications or bariatric surgery and apnea–hypopnea index in obstructive sleep apnea”** (Obesity Reviews, 2024; 25(4):e13697).
+This repository contains the Stata analysis script and study-level extraction material associated with “The association of weight loss from anti-obesity medications or bariatric surgery and apnea–hypopnea index in obstructive sleep apnea” (*Obesity Reviews*, 2024; 25(4):e13697). It supports inspection and attempted reproduction of the scripted meta-analyses and meta-regressions. The current source has a graph-export path defect, and this README does not certify a successful end-to-end run or agreement with the published exhibits.
 
-## Links & persistent IDs
-- **Article (publisher)**: https://doi.org/10.1111/obr.13697
-- **PubMed**: https://pubmed.ncbi.nlm.nih.gov/38342767/
-- **PubMed Central (open access)**: https://pmc.ncbi.nlm.nih.gov/articles/PMC11311115/
-- **Systematic review registration (PROSPERO)**: https://www.crd.york.ac.uk/PROSPERO/view/CRD42022378853
-- **This repository**: https://github.com/reblocke/AOM-and-Bari-Surg-for-OSA-SRMA
+- [Article DOI](https://doi.org/10.1111/obr.13697) · [PubMed](https://pubmed.ncbi.nlm.nih.gov/38342767/) · [open-access article](https://pmc.ncbi.nlm.nih.gov/articles/PMC11311115/) · [PROSPERO registration](https://www.crd.york.ac.uk/PROSPERO/view/CRD42022378853)
+- [Stata source](./OSA%20Wt%20Loss%20SRMA.do) · [citation metadata](./CITATION.cff) · [contribution guidance](./CONTRIBUTING.md)
 
-If you re-use this repository, please cite the paper (see **Cite this work** below) and, if you use or adapt the code directly, please also cite/acknowledge this repository.
+## Run the existing script
 
-## Cite this work
-Preferred citation (article):
+The do-file declares **Stata 18**. It uses Stata's `meta` commands and calls `adjust`; its graphs select `cleanplots`, `white_tableau`, and `white_w3d` schemes. The repository does not install or pin those schemes or any additional command packages. Their availability, the licensed Stata environment, and platform compatibility have not been tested for this documentation review.
+
+Use a **new disposable checkout** with the repository as Stata's working directory and a previously unused result root whose parent exists. The script copies `OSA Wt Loss SRMA.do` by its bare filename, so supplying a separate workbook directory does not change the required working directory. Its optional arguments are, in order, `workbook_dir` (default `.`) and `output_root` (default `Results and Figures`). The workbook directory must contain `Data Extraction Table.xlsx`; the script imports only its `Sheet1` with the first row as headers.
+
+Before attempting the command below, note its writes: it creates a dated `<output_root>/<Stata $S_DATE>/Logs` directory, opens a text log with `replace`, copies the do-file there, saves and reuses `outputs/stata/osa_antiobesity_srma.dta` with `replace` relative to the working directory, and attempts PNG exports under the dated root with `replace`. A repeated run can replace earlier results. The current graph-export macro delimiter is malformed, beginning at line 97, so graph creation and a complete run are unverified. The script has no explicit success marker. Only a completed run with its final export, checked files, and log could support reproduction; an earlier log or derived dataset alone cannot. This invocation was inspected in source, not executed here.
+
+From the new checkout's root, the following example uses the tracked workbook and a new `new-results` root:
+
+```stata
+cd "/path/to/new-disposable-checkout"
+do "OSA Wt Loss SRMA.do" "." "new-results"
+```
+
+For a workbook stored elsewhere, supply its containing directory as the first argument and keep the second argument a previously unused result root. The do-file does **not** import the RoB workbook or the `AGL check` sheet. See the [output and verification boundary](#output-and-verification-boundary) before interpreting any files.
+
+## Inputs and data meaning
+
+| Tracked file | Role in this repository | Used by the do-file? |
+|---|---|---|
+| [`Data Extraction Table.xlsx`](./Data%20Extraction%20Table.xlsx), `Sheet1` | Extracted intervention/control comparisons with author, year, DOI, group sizes, weight and AHI measures, follow-up, and a `RoB` field. | **Yes**; the script retains rows with nonmissing `stauthor`. |
+| Same workbook, `AGL check` | Separate extraction-review sheet. | No. |
+| [`ROB2_OSA SRMA.xlsx`](./ROB2_OSA%20SRMA.xlsx), `Sheet 1` | Supporting study-level RoB2 domain and overall judgments. | No; the analysis uses the `RoB` field already in `Sheet1`. |
+
+An imported row is an extracted comparison, not necessarily a unique trial; the script does not enforce a DOI or study-key uniqueness rule. It constructs a display label from author, year, and intervention type. The workbook headers specify AHI, weight, ESS, and follow-up fields; follow-up is labeled in months, percentage weight change is labeled as such, and weight-unit columns are present. The script's AHI plots label absolute change in events/hour. Check the workbook and article before interpreting a field whose unit or derivation is not explicit.
+
+The do-file converts selected workbook columns to numeric values with `destring`, calculates `int_wt_loss_effect = controlmeanweightchange - intmeanweightchange`, derives weight-loss categories including a 10% threshold, converts the `RoB` field, and prefixes intervention labels. It has no documented rule equating a blank or failed conversion with a negative result. Keep the source workbook headers stable when comparing the documented workflow to the script. These are compiled **study-level** tables; the repository does not contain patient-level records or PHI.
+
+## Output and verification boundary
+
+| Source step | Intended or defined location | What is established |
+|---|---|---|
+| Setup and log | `<output_root>/<Stata $S_DATE>/Logs/osa_wt_loss_srma.log`, plus a time-stamped copy of the do-file in `Logs/` | The script creates these directories, then opens the text log and copies its source. A repeated run may replace the log. |
+| Cleaned/derived data | `outputs/stata/osa_antiobesity_srma.dta` relative to the repository working directory | The script saves and later reuses this Stata dataset. It is **not** routed under `output_root`. |
+| Graphs | PNG names under the dated result directory, as declared in the script | `graph export` statements already exist, but their `results_dir` macro uses a backtick where Stata requires a closing apostrophe (first occurrence at line 97, repeated through the final export). Successful paths or files have not been verified. |
+| Tables/statistics | Stata results and the opened log | `meta summarize`, `meta regress`, and related commands are present; the script has no CSV, Excel, or `putexcel` table-export call. |
+
+**Static review record (2026-09-24):** At implementation base `main@31680357215d285e39fad6dd3b0fd876508c72ee`, the do-file blob was `1aa1621dc6a9dfb61aa1598a268b8fefc44d7c24`. Its malformed graph paths remain a **separate code issue**: inspect and correct those macro delimiters in an authorized do-file change, then run in a new output namespace and check the log and files. This review changed documentation only. A Stata run, graph creation, table reproduction, and comparison with the paper were **not performed**. An opened log or derived `.dta` alone would not establish completion of the full script.
+
+## Source-to-exhibit guide
+
+The mapping below reports source labels and intended outputs, not verified agreement with the publication. The named PNG exports are subject to the path defect above.
+
+| Source section | Named product in the do-file | Qualification |
+|---|---|---|
+| Absolute AHI-change forest plots | `Figure 2 AHI Diff by 10 Perc Wt Loss.png`; `Figure 3- AHI Diff by Type and Intervention.png` | The Figure 3 comment says its labels require manual editing. |
+| Main meta-regression and bubble plots | `Figure 4- Wt Loss v AHI Diff Meta Regress.png`; `Figure S5- Wt Loss v AHI Diff Meta Regress by type.png` | Lines contain export calls; publication match is unverified. |
+| Relative AHI, sleepiness, and exclusion/RoB sensitivity sections | Figure S6 variants and `Supplement ... .png` names in the script | The comments and filenames are the available crosswalk; completeness and final publication numbering are unverified. |
+| Numerical tables | No dedicated table files named by the script | Review Stata output/log against the paper; do not infer a table export from a figure comment. |
+
+## Citation, rights, and support
+
+Preferred article citation:
 
 > Locke BW, Gomez-Lumbreras A, Tan CJ, Nonthasawadsri T, Veettil SK, Patikorn C, Chaiyakunapruk N. The association of weight loss from anti-obesity medications or bariatric surgery and apnea–hypopnea index in obstructive sleep apnea. *Obesity Reviews*. 2024;25(4):e13697. doi:10.1111/obr.13697.
 
-For software citation metadata, see [`CITATION.cff`](./CITATION.cff). Many tools (including GitHub) can read this file directly.
+The [MIT license](./LICENSE) covers repository software. The extraction and RoB workbooks are supplied to support review of the article; cite the article when using them, and describe changes if redistributing modified versions. Check data/third-party reuse rights separately from the code license. Cite or acknowledge this repository when adapting its code; see [CITATION.cff](./CITATION.cff) for software metadata. Funding included NIH Ruth L. Kirschstein NRSA **5T32HL105321** and the American Thoracic Society ASPIRE Program. We thank **Mary McFarland, MLS** for help refining the search strategy; see the article for the authoritative acknowledgments.
 
-## Quick start: reproduce the main analyses
-
-> **Requirements**: Stata (SE/MP recommended). Analyses rely on one `.do` script and two Excel workbooks provided in this repository.
-
-1. **Clone** this repository locally.
-2. **Open Stata** and set the working directory to the repo root (replace the path with yours):
-   ```stata
-   cd "path/to/AOM-and-Bari-Surg-for-OSA-SRMA"
-   ```
-3. **Run the analysis** script:
-   ```stata
-   do "OSA Wt Loss SRMA.do"
-   ```
-
-### Outputs
-- Forest/meta-analysis outputs and meta-regression plots are generated within Stata. To save figures programmatically, add `graph export` commands after the plotting steps in the `.do` file, for example:
-  ```stata
-  graph export "figures/fig3_ahi_change_by_intervention.png", width(2400) replace
-  graph export "figures/fig4_meta_regression_ahi_vs_weightloss.png", width(2400) replace
-  ```
-- Tabular outputs can be exported as CSV/Excel using `outsheet`, `putexcel`, or `export excel` calls as desired.
-
-> **Note**: The `.do` file assumes the Excel files below are present in the repository root. If you move them, update the corresponding `import excel` lines in the script.
-
-## Data access
-The study uses extracted, study-level data compiled by the authors. Two Excel workbooks are included here:
-
-- **`Data Extraction Table.xlsx`** — primary extraction sheet with trial-level variables used for the meta-analysis/meta-regression (e.g., AHI at baseline and follow-up, percent weight change, follow-up duration, intervention and control definitions, etc.).
-- **`ROB2_OSA SRMA.xlsx`** — risk-of-bias 2 (RoB2) assessments for included randomized trials, captured at the outcome level per study.
-
-There are no patient-level data or protected health information in this repository.
-
-### Workbook dictionary
-| File | Sheet(s) | Unit of observation | Key fields |
-|---|---|---|---|
-| `Data Extraction Table.xlsx` | `Sheet1`, `AGL check` | Study arm or extracted comparison from an included trial | Author/year, DOI, intervention category, intervention/control sample sizes, weight units and changes, AHI baseline/follow-up/change, follow-up timing, and analysis flags used by the Stata script. |
-| `ROB2_OSA SRMA.xlsx` | `Sheet 1` | Study-level risk-of-bias assessment | Study identifier, RoB2 domains `D1`-`D5`, and overall judgment. |
-
-Variable names are preserved as worksheet headers because the Stata script imports the workbooks directly. When modifying a workbook, keep header names stable or update the corresponding `import excel` and variable-reference code in `OSA Wt Loss SRMA.do`.
-
-## Environment
-- **Software**: Stata (SE/MP recommended). The `.do` file uses standard Stata commands for meta-analysis and meta-regression.
-- **Operating systems**: Any OS supported by Stata (Windows/macOS/Linux).
-- **Reproducibility tips**: To capture exact commands and output, consider running Stata in batch mode with logging enabled, e.g.:
-  ```bash
-  # Windows (StataMP)
-  "C:\Program Files\Stata18\StataMP-64.exe" /e do "OSA Wt Loss SRMA.do"
-  # macOS (StataMP)
-  /Applications/Stata/StataMP.app/Contents/MacOS/StataMP -b do "OSA Wt Loss SRMA.do"
-  ```
-
-## Repository layout
-```
-.
-├── OSA Wt Loss SRMA.do                # End-to-end analysis (meta-analysis + meta-regression)
-├── Data Extraction Table.xlsx         # Study-level extraction data
-├── ROB2_OSA SRMA.xlsx                 # Risk-of-bias (RoB2) assessments
-├── LICENSE                            # MIT License (applies to code in this repository)
-└── (add) figures/ and outputs/        # Recommended folders for saved figures/tables
-```
-
-## Workflow overview
-1. Import extracted data from the Excel workbooks.
-2. Compute study-level effect sizes (AHI change and/or percent change) and variances per trial arm.
-3. Conduct random-effects meta-analyses of AHI change by intervention and class.
-4. Perform meta-regression of % weight loss vs. AHI change at longest follow‑up.
-5. Sensitivity analyses (e.g., remove high RoB trials) and subgroup checks.
-6. Export figures and summary tables.
-
-## Results mapping (paper ↔ code)
-| Paper item | Where to generate | How to save |
-|---|---|---|
-| **Figure 3** – Random-effects meta-analysis of AHI change by intervention/class | `OSA Wt Loss SRMA.do` (forest/meta section) | Add `graph export "figures/fig3_ahi_change_by_intervention.png", replace` after the plot command |
-| **Figure 4** – Meta-regression of % weight loss vs. AHI change | `OSA Wt Loss SRMA.do` (meta-regression section) | Add `graph export "figures/fig4_meta_regression_ahi_vs_weightloss.png", replace` |
-| Supplemental figures/tables (S10–S17 etc.) | same script, respective sections | Export with meaningful file names into `figures/` or `outputs/` |
-
-*(If you prefer, create separate `.do` files per figure and call them from a master script—this makes mapping even clearer.)*
-
-## License
-- **Code** in this repository is licensed under the [MIT License](./LICENSE).
-- **Data extraction tables** are provided to support reproducibility of the published manuscript. If you reuse the compiled tables, please **cite the paper** above. If you redistribute modified versions, include a note describing changes.
-
-## Funding & acknowledgments
-This work was supported by the **National Institutes of Health** (Ruth L. Kirschstein National Research Service Award **5T32HL105321**) and the **American Thoracic Society ASPIRE Program**. We thank **Mary McFarland, MLS** for assistance refining the search strategy. See the article’s Acknowledgments/Funding for the authoritative record.
-
-## Contributing and governance
-We welcome issues and pull requests that improve clarity, reproducibility, or documentation. Please see:
-- [`CONTRIBUTING.md`](./CONTRIBUTING.md)
-- [`CODE_OF_CONDUCT.md`](./CODE_OF_CONDUCT.md)
-- [`SECURITY.md`](./SECURITY.md)
-
-## Maintainers / contact
-- Maintainer: **Brian W. Locke** · brian.locke@hsc.utah.edu
-- Please use [GitHub Issues](https://github.com/reblocke/AOM-and-Bari-Surg-for-OSA-SRMA/issues) for bug reports and questions related to the repository.
+For documentation or code contributions, see [CONTRIBUTING.md](./CONTRIBUTING.md). Use [GitHub Issues](https://github.com/reblocke/AOM-and-Bari-Surg-for-OSA-SRMA/issues) for questions and [SECURITY.md](./SECURITY.md) for security reports. Maintainer: Brian W. Locke.

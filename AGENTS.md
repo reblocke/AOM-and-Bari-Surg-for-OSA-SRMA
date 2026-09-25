@@ -12,17 +12,10 @@ This repository contains the Stata analysis script and study-level extraction wo
 - Start with `README.md` for links, citation, data-access notes, workflow, and paper-to-code mapping.
 - Use `CITATION.cff` for structured citation metadata.
 - The main analysis script is `OSA Wt Loss SRMA.do`.
-- The workbook inputs are `Data Extraction Table.xlsx` and `ROB2_OSA SRMA.xlsx`.
+- The computational workbook input is `Data Extraction Table.xlsx` (`Sheet1`); `ROB2_OSA SRMA.xlsx` is supporting RoB material and is not imported by the do-file.
 
 ## Reproduction workflow
-Run from the repository root with Stata:
-
-```stata
-cd "path/to/AOM-and-Bari-Surg-for-OSA-SRMA"
-do "OSA Wt Loss SRMA.do"
-```
-
-The script reads the Excel workbooks from the repository root. If the workbooks are moved, update the `import excel` calls in the `.do` file.
+Use the source-inspected [README invocation](./README.md#run-the-existing-script) only in a new disposable checkout with licensed Stata 18 and a previously unused result root. The script accepts optional `workbook_dir output_root` arguments (defaults: `.`, `Results and Figures`). It reads only `Data Extraction Table.xlsx` from `workbook_dir`, copies the do-file from the working directory, opens a dated log with `replace`, and saves derived data with `replace` under `outputs/stata` relative to that working directory. It declares figure exports under the dated result directory. See the [README output boundary](./README.md#output-and-verification-boundary): current graph-export paths have malformed `results_dir` macro delimiters. Do not claim successful figure creation or publication reproduction without a separate code fix and execution check.
 
 ## Workbook structure
 - `Data Extraction Table.xlsx`: study-level trial and intervention data, including DOI, intervention class, sample size, weight measures, AHI measures, follow-up, and analysis variables.
